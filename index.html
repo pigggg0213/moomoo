@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
@@ -174,8 +174,41 @@
     .content { padding: 20px; }
   }
 
-  .tab-content { display: none; }
-  .tab-content.active { display: block; }
+  /* 页顶主 Tab：飞书式活动复盘 vs 原五大分析子页（深度洞察等） */
+  .main-tab-strip {
+    background: #fff;
+    border-bottom: 1px solid #e8e8e8;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0;
+    padding: 0 16px;
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    box-shadow: 0 1px 0 rgba(15, 52, 96, 0.06);
+    max-width: 1280px;
+    margin: 0 auto;
+  }
+  .main-tab-strip button {
+    border: none;
+    background: transparent;
+    padding: 13px 14px;
+    font-size: 14px;
+    font-weight: 600;
+    color: #646a73;
+    cursor: pointer;
+    border-bottom: 3px solid transparent;
+    font-family: inherit;
+    margin-bottom: -1px;
+  }
+  .main-tab-strip button:hover { color: #245bdb; }
+  .main-tab-strip button.active {
+    color: #0f3460;
+    border-bottom-color: #0f3460;
+  }
+  .main-tab-panel { display: none; }
+  .main-tab-panel.active { display: block; }
 
   .highlight-box { background: linear-gradient(135deg, #0f3460, #16213e); color: white; border-radius: 12px; padding: 24px 28px; margin-bottom: 20px; }
   .highlight-box h3 { font-size: 16px; margin-bottom: 12px; color: #ffa500; }
@@ -206,8 +239,56 @@
   .people-metric-card p { font-size: 12px; color: #555; line-height: 1.7; }
   .people-metric-card .k { color: #0f3460; font-weight: 700; }
 
+  /* CAC · 受邀/会员加码复盘：结论置顶 callout */
+  .retro-cac-exec-summary {
+    background: #f5f7fa;
+    border-left: 4px solid #003366;
+    border-radius: 8px;
+    padding: 14px 16px 14px 18px;
+    margin: 8px 0 20px;
+  }
+  .retro-cac-exec-summary .retro-cac-exec-title {
+    font-size: 13px;
+    font-weight: 700;
+    color: #003366;
+    margin: 0 0 10px;
+  }
+  .retro-cac-exec-summary ul {
+    margin: 0;
+    padding-left: 1.2em;
+    font-size: 12px;
+    line-height: 1.75;
+    color: #333;
+  }
+  .retro-cac-exec-summary li { margin-bottom: 8px; }
+  .retro-cac-exec-summary li:last-child { margin-bottom: 0; }
+  .retro-cac-mod-h5 {
+    margin: 18px 0 8px;
+    font-size: 13px;
+    font-weight: 700;
+    color: #1a1a2e;
+  }
+  .retro-cac-mod-line {
+    font-size: 12px;
+    color: #444;
+    line-height: 1.75;
+    margin: 0 0 8px;
+  }
+
+  /* 分项表格 · 核心指标单元格高亮 */
+  .summary-table th.retro-cac-kpi-head {
+    background: #dfeaf8;
+    color: #063057;
+    font-weight: 700;
+  }
+  .summary-table td.retro-cac-kpi {
+    background: #e8f4fc;
+    color: #063057;
+    font-weight: 700;
+  }
+
   /* 左侧目录（飞书式大纲） + 锚点留白 */
-  .anchor-target { scroll-margin-top: 88px; }
+  .anchor-target { scroll-margin-top: 108px; }
   .report-chapter { display: block; }
 
   .report-layout {
@@ -225,7 +306,7 @@
     width: 248px;
     flex-shrink: 0;
     position: sticky;
-    top: 12px;
+    top: 56px;
     align-self: flex-start;
     max-height: calc(100vh - 24px);
     overflow-y: auto;
@@ -294,7 +375,7 @@
       border-bottom: 1px solid #dee0e3;
       padding: 12px 20px 16px;
     }
-    .anchor-target { scroll-margin-top: 88px; }
+    .anchor-target { scroll-margin-top: 108px; }
   }
 
   /* 复盘 Tab：大章节标题配色 */
@@ -330,21 +411,6 @@
     box-shadow: 0 2px 14px rgba(234, 88, 12, 0.08);
   }
   .report-card.jump-dir4 > h4 { color: #c2410c !important; }
-
-  .support-jump-wrap {
-    border-radius: 12px;
-    padding: 14px 14px 4px;
-    background: linear-gradient(135deg, #f8fafc 0%, #eef2ff 100%);
-    border: 1px solid #e2e8f0;
-    margin-bottom: 14px;
-  }
-  .support-jump-wrap .support-jump-label {
-    font-size: 12px;
-    font-weight: 700;
-    color: #4338ca;
-    margin: 0 0 10px 4px;
-    letter-spacing: 0.02em;
-  }
 </style>
 </head>
 <body>
@@ -359,6 +425,14 @@
   </div>
 </div>
 
+<div class="main-tab-strip" role="tablist" aria-label="报告章节切换">
+  <button type="button" role="tab" class="active" data-panel="panel-doc" aria-selected="true">活动复盘</button>
+  <button type="button" role="tab" data-panel="tab-insights" aria-selected="false">深度洞察</button>
+  <button type="button" role="tab" data-panel="tab-competitor" aria-selected="false">竞品策略参考</button>
+  <button type="button" role="tab" data-panel="tab-recommendations" aria-selected="false">下阶段优化方案</button>
+</div>
+
+<div id="panel-doc" class="main-tab-panel active">
 <div class="report-layout">
 <aside class="doc-outline" id="doc-outline" aria-label="文档目录">
   <div class="doc-outline-title">目录</div>
@@ -377,10 +451,8 @@
   <div class="doc-outline-group" data-tab-group="conclusion">
     <div class="doc-outline-group-head">复盘+下阶段计划</div>
     <ul class="doc-outline-list">
-      <li><a class="doc-outline-link" href="#" data-outline-anchor="concl-cover" onclick="outlineGo('concl-cover',this);return false;">开篇 · 复盘+下阶段计划</a></li>
       <li><a class="doc-outline-link" href="#" data-outline-anchor="concl-summary" onclick="outlineGo('concl-summary',this);return false;">一、复盘核心结论</a></li>
-      <li><a class="doc-outline-link" href="#" data-outline-anchor="concl-directions-head" onclick="outlineGo('concl-directions-head',this);return false;">二、优化方向（章节）</a></li>
-      <li><a class="doc-outline-link" href="#" data-outline-anchor="concl-support" onclick="outlineGo('concl-support',this);return false;">结论支撑图（四宫格）</a></li>
+      <li><a class="doc-outline-link" href="#" data-outline-anchor="concl-directions-head" onclick="outlineGo('concl-directions-head',this);return false;">二、优化方向</a></li>
       <li><a class="doc-outline-link" href="#" data-outline-anchor="concl-dir1" onclick="outlineGo('concl-dir1',this);return false;">方向1 · 拼图梯度优化</a></li>
       <li><a class="doc-outline-link" href="#" data-outline-anchor="concl-dir2" onclick="outlineGo('concl-dir2',this);return false;">方向2 · 抽奖玩法</a></li>
       <li><a class="doc-outline-link" href="#" data-outline-anchor="concl-dir3" onclick="outlineGo('concl-dir3',this);return false;">方向3 · 人群/场景加码</a></li>
@@ -423,7 +495,7 @@
 
   <div class="report-card anchor-target" style="margin-bottom:16px;" id="retro-funnel">
     <h4>2）数据表现-核心漏斗（详细分析）</h4>
-    <div class="mini">先看规模与效率，再看传播链路和行情联动；所有漏斗分析集中在此</div>
+    <div class="mini">规模与效率 · 传播链路 · 行情联动</div>
     <div class="report-grid" style="margin-bottom:10px;">
       <div>
         <div class="mini">规模结果：页面UV / 受邀UV / 有效入金PC</div>
@@ -457,7 +529,7 @@
 
   <div class="report-card anchor-target" style="margin-bottom:16px;" id="retro-detail">
     <h4>3）完整数据明细（核心字段）</h4>
-    <div class="mini">放在分析后，作为结论的数据底座</div>
+    <div class="mini">核心字段月度明细</div>
     <table class="data-table">
       <thead>
         <tr>
@@ -563,13 +635,13 @@
 
   <div class="section anchor-target" id="retro-cac">
     <div class="section-title retro-t3">三、CAC</div>
-    <div class="section-subtitle">成本变化、目标边界与玩法空间</div>
+    <div class="section-subtitle">有效 PC-CAC · 核销明细 · 受邀与会员加码分项</div>
   </div>
   <div class="report-card">
     <h4>CAC整体情况总结</h4>
     <div class="note"><strong>核心结论1：</strong>拼图2.0在成本控制上已被验证有效：有效PC-CAC从2月高点 <strong>654.39</strong> 降至3月 <strong>121.36</strong>，4月进一步降至 <strong>71.33</strong>。</div>
-    <div class="note"><strong>核心结论2：</strong>当前CAC显著低于目标 <strong>190</strong>，有预算余量可用于“定向加玩法”提升吸引力，但前提是继续坚持有效PC口径与人群分层。</div>
-    <div class="note"><strong>核心结论3：</strong>CAC改善与终极转化修复并不同步，说明下一阶段重点应从“单纯控本”升级为“控本+提质并行”。</div>
+    <div class="note"><strong>核心结论2：</strong>大盘有效 PC-CAC 低于目标 <strong>190</strong>；加码策略的实际效果见本节分项数据与文首<strong>复盘小结</strong>。</div>
+    <div class="note"><strong>核心结论3：</strong>成本收敛与转化修复不同步；除 PC-CAC 外需同步看<strong>触达、受邀链路、分项核销</strong>。</div>
 
     <div class="mini" style="margin-top:10px;">有效PC-CAC变化 + 终极转化率（月度）</div>
     <div class="chart-wrapper"><canvas id="retroRewardChart"></canvas></div>
@@ -579,17 +651,101 @@
     <div class="mini" style="margin-top:10px;">CAC月度明细（按飞书复盘口径）</div>
     <table class="summary-table">
       <thead>
-        <tr><th>月份</th><th>核销金额预估</th><th>有效PC</th><th>有效PC-CAC</th><th>阶段判断</th></tr>
+        <tr><th>月份</th><th>核销金额预估</th><th>有效PC</th><th class="retro-cac-kpi-head">有效PC-CAC</th><th>阶段判断</th></tr>
       </thead>
       <tbody>
-        <tr><td>1月</td><td>564,417</td><td>1,016</td><td>555.53</td><td>高成本阶段，奖励结构需要收敛</td></tr>
-        <tr><td>2月</td><td>391,325</td><td>598</td><td>654.39</td><td>成本峰值，暴露旧机制控本不足</td></tr>
-        <tr><td>3月</td><td>76,700</td><td>632</td><td>121.36</td><td>拼图2.0切换后，成本快速回落</td></tr>
-        <tr><td>4月</td><td>49,149</td><td>689</td><td>71.33</td><td>成本进入可控区，具备定向加码空间</td></tr>
+        <tr><td>1月</td><td>564,417</td><td>1,016</td><td class="retro-cac-kpi">555.53</td><td>高成本阶段，奖励结构需要收敛</td></tr>
+        <tr><td>2月</td><td>391,325</td><td>598</td><td class="retro-cac-kpi">654.39</td><td>成本峰值，暴露旧机制控本不足</td></tr>
+        <tr><td>3月</td><td>76,700</td><td>632</td><td class="retro-cac-kpi">121.36</td><td>拼图2.0切换后，成本快速回落</td></tr>
+        <tr><td>4月</td><td>49,149</td><td>689</td><td class="retro-cac-kpi">71.33</td><td>成本进入可控区，具备定向加码空间</td></tr>
       </tbody>
     </table>
 
-    <div class="note"><strong>精简结论：</strong>下一步应设“双目标”：<strong>CAC不超过190</strong> + <strong>终极转化恢复到7%+</strong>，通过“拼图2.0底盘 + 人群分层加码 + 节点短促玩法”实现规模与效率平衡。</div>
+    <div class="mini anchor-target" id="retro-cac-boost" style="margin-top:14px;">受邀人加码与会员加码（分项数据）</div>
+
+    <div class="retro-cac-exec-summary">
+      <div class="retro-cac-exec-title">策略是否有效 · 复盘小结</div>
+      <ul>
+        <li><strong>受邀人加码：</strong>领取率长期在约 <strong>5%～8%</strong>，相对注册量级覆盖面偏窄；已领取用户核销率约 <strong>32%～40%</strong>，提示感知或链路摩擦仍大——单从漏斗看，对大盘的「最后一公里」撬动偏弱。</li>
+        <li><strong>会员加码：</strong>V2/V3 奖励放量且占当期发奖比重上升（4 月约 <strong>25.78%</strong>），与会员在裂变中的高浓度参与一致；但在活动页访问占比极低（V3 约 <strong>3%</strong>）背景下，加码对大盘的边际增量易被触达天花板压制。</li>
+        <li><strong>会员人群：</strong>邀请结构、有效 PC 结构与邀请人分层渗透率显示会员层级越高价值越大——会员侧值得持续投入，但当前瓶颈更显性的是「少有人进到活动页」而非单一加码规则本身。</li>
+      </ul>
+    </div>
+
+    <h5 class="retro-cac-mod-h5">1）受邀人加码</h5>
+    <p class="retro-cac-mod-line"><strong>规则摘要：</strong>受邀人手动领取 <strong>$25</strong> 股票现金券；<strong>14 天内任意入金</strong>可解锁奖励。</p>
+    <p class="retro-cac-mod-line"><strong>复盘观察：</strong>整体领取率偏低，对多数注册用户的「最后一公里」推动不明显；已领取用户核销率约在 <strong>30%～40%</strong> 区间波动。</p>
+    <table class="summary-table" style="margin-bottom:14px;font-size:12px;">
+      <thead>
+        <tr><th>月份</th><th>受邀人（注册）</th><th>奖励领取</th><th>奖励核销</th><th class="retro-cac-kpi-head">领取率</th><th class="retro-cac-kpi-head">核销率</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>1月</td><td>3,290</td><td>161</td><td>52</td><td class="retro-cac-kpi">4.89%</td><td class="retro-cac-kpi">32.30%</td></tr>
+        <tr><td>2月</td><td>2,228</td><td>168</td><td>55</td><td class="retro-cac-kpi">7.54%</td><td class="retro-cac-kpi">32.74%</td></tr>
+        <tr><td>3月</td><td>1,171</td><td>87</td><td>34</td><td class="retro-cac-kpi">7.43%</td><td class="retro-cac-kpi">39.08%</td></tr>
+        <tr><td>4月</td><td>1,301</td><td>73</td><td>29</td><td class="retro-cac-kpi">5.61%</td><td class="retro-cac-kpi">39.73%</td></tr>
+      </tbody>
+    </table>
+    <div class="mini" style="margin:-6px 0 14px;font-size:11px;color:#888;">核销率分母为当期奖励领取人数。</div>
+
+    <h5 class="retro-cac-mod-h5">2）会员加码（邀请人 · 发奖结构）</h5>
+    <p class="retro-cac-mod-line"><strong>规则摘要：</strong>V2 会员加码 <strong>$30</strong> 股票现金券；V3 会员加码 <strong>$50</strong> 股票现金券。</p>
+    <p class="retro-cac-mod-line"><strong>复盘观察：</strong>3–4 月 V2/V3 会员奖励笔数上升；会员奖励占当期发奖比重提高（见「会员占比」行）。</p>
+    <table class="summary-table" style="margin-bottom:14px;font-size:12px;">
+      <thead>
+        <tr><th>发奖明细</th><th>3月</th><th>4月</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>2001018 · 1～12 人奖励</td><td>415</td><td>508</td></tr>
+        <tr><td>2001019 · 13 人及以上奖励</td><td>1</td><td>2</td></tr>
+        <tr><td>V2 / V3 会员奖励</td><td class="retro-cac-kpi">74</td><td class="retro-cac-kpi">131</td></tr>
+        <tr style="background:#f0f8ff;"><td><strong>会员占比</strong></td><td class="retro-cac-kpi">17.83%</td><td class="retro-cac-kpi">25.78%</td></tr>
+      </tbody>
+    </table>
+
+    <h5 class="retro-cac-mod-h5">3）活动触达（邀请活动页）</h5>
+    <p class="retro-cac-mod-line"><strong>数据口径：</strong>按 vip_level × 是否访问邀请活动页（0/1）统计大盘用户数及访问用户中的邀请人数。</p>
+    <p class="retro-cac-mod-line"><strong>复盘观察：</strong>会员层级越高，访问占比相对越高；V3 访问用户占大盘约 <strong>3.1%</strong>，触达仍不足。</p>
+    <table class="summary-table" style="margin-bottom:14px;font-size:11px;">
+      <thead>
+        <tr><th>vip_level</th><th>是否访问<br>邀请活动页</th><th>大盘用户数</th><th class="retro-cac-kpi-head">大盘占比</th><th class="retro-cac-kpi-head">邀请人数</th><th class="retro-cac-kpi-head">邀请人占比</th></tr>
+      </thead>
+      <tbody>
+        <tr><td rowspan="2">非会员</td><td>0</td><td>300,521</td><td>99.8%</td><td>—</td><td>—</td></tr>
+        <tr><td>1</td><td>541</td><td class="retro-cac-kpi">0.2%</td><td class="retro-cac-kpi">541</td><td class="retro-cac-kpi">93.28%</td></tr>
+        <tr><td rowspan="2">会员 V1</td><td>0</td><td>118,791</td><td>99.4%</td><td>—</td><td>—</td></tr>
+        <tr><td>1</td><td>740</td><td class="retro-cac-kpi">0.6%</td><td class="retro-cac-kpi">740</td><td class="retro-cac-kpi">93.55%</td></tr>
+        <tr><td rowspan="2">会员 V2</td><td>0</td><td>71,118</td><td>98.2%</td><td>—</td><td>—</td></tr>
+        <tr><td>1</td><td>1,276</td><td class="retro-cac-kpi">1.8%</td><td class="retro-cac-kpi">1,276</td><td class="retro-cac-kpi">98.08%</td></tr>
+        <tr><td rowspan="2">会员 V3</td><td>0</td><td>33,758</td><td>96.9%</td><td>—</td><td>—</td></tr>
+        <tr><td>1</td><td>1,080</td><td class="retro-cac-kpi">3.1%</td><td class="retro-cac-kpi">1,080</td><td class="retro-cac-kpi">98.54%</td></tr>
+      </tbody>
+    </table>
+    <div class="mini" style="margin:-6px 0 14px;font-size:11px;color:#888;">邀请人占比列与数据源导出口径一致。</div>
+
+    <h5 class="retro-cac-mod-h5">4）会员分层 · 邀请人与受邀 PC</h5>
+    <p class="retro-cac-mod-line"><strong>数据口径：</strong>复盘周期内，按邀请人 vip 分层汇总用户基数、邀请人、受邀 PC、有效 PC。</p>
+    <p class="retro-cac-mod-line"><strong>复盘观察：</strong>会员邀请人兑换意愿与裂变表现整体优于非会员；随等级上升 ARPU 提高、CAC 降低。V2/V3 约占大盘用户约两成，约占邀请人约六成；邀请人渗透率仍低。</p>
+    <table class="summary-table" style="margin-bottom:14px;font-size:11px;">
+      <thead>
+        <tr><th>vip_level</th><th>用户基数</th><th>邀请人数量</th><th>邀请人占比</th><th class="retro-cac-kpi-head">邀请人渗透率</th><th>受邀 PC</th><th>受邀 PC 占比</th><th>有效 PC</th><th class="retro-cac-kpi-head">有效 PC 占比</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>非会员</td><td>301,062</td><td>580</td><td>15.4%</td><td class="retro-cac-kpi">0.2%</td><td>1,959</td><td>26.1%</td><td>493</td><td class="retro-cac-kpi">12.0%</td></tr>
+        <tr><td>会员 V1</td><td>119,531</td><td>790</td><td>21.0%</td><td class="retro-cac-kpi">0.7%</td><td>1,362</td><td>18.2%</td><td>635</td><td class="retro-cac-kpi">15.4%</td></tr>
+        <tr><td>会员 V2</td><td>72,394</td><td>1,301</td><td>34.5%</td><td class="retro-cac-kpi">1.8%</td><td>2,471</td><td>32.9%</td><td>1,687</td><td class="retro-cac-kpi">41.0%</td></tr>
+        <tr><td>会员 V3</td><td>34,838</td><td>1,096</td><td>29.1%</td><td class="retro-cac-kpi">3.1%</td><td>1,712</td><td>22.8%</td><td>1,300</td><td class="retro-cac-kpi">31.6%</td></tr>
+        <tr style="background:#f8f9ff;"><td><strong>合计</strong></td><td><strong>527,825</strong></td><td><strong>3,767</strong></td><td><strong>100.0%</strong></td><td class="retro-cac-kpi"><strong>0.7%</strong></td><td><strong>7,504</strong></td><td><strong>100.0%</strong></td><td><strong>4,115</strong></td><td class="retro-cac-kpi"><strong>100.0%</strong></td></tr>
+      </tbody>
+    </table>
+
+    <div class="note"><strong>后续关注点</strong>
+      <ul style="margin:8px 0 0;padding-left:1.25em;line-height:1.75;font-size:12px;color:#555;">
+        <li><strong>受邀链路：</strong>分解曝光—领取—入金解锁—核销，优先改善领取环节。</li>
+        <li><strong>触达：</strong>提升会员到达邀请活动页的入口与曝光。</li>
+        <li><strong>核算：</strong>PC-CAC 报表分列拼图主线与分项加码核销。</li>
+      </ul>
+    </div>
   </div>
 </div>
 </div>
@@ -598,12 +754,32 @@
 <div id="tab-conclusion" class="report-chapter">
 <div class="content">
 
-  <div class="section anchor-target" id="concl-cover">
-    <div class="section-title concl-t1" style="border-left-color:#0f3460;color:#0f3460;">复盘+下阶段计划</div>
-  </div>
-
   <div class="section anchor-target" id="concl-summary">
     <div class="section-title concl-t1">一、复盘核心结论</div>
+
+    <div class="support-list" style="margin-bottom:18px;">
+    <div class="support-item">
+      <h5>结论支撑图A：放量与效率背离</h5>
+      <div class="chart-wrapper" style="height:220px;"><canvas id="supportMismatchChart"></canvas></div>
+      <p><span class="k">支撑：</span>3月UV放量但终极转化率最低，验证「抓量不抓质」会导致放量不增效。</p>
+    </div>
+    <div class="support-item">
+      <h5>结论支撑图B：CAC控制成效</h5>
+      <div class="chart-wrapper" style="height:220px;"><canvas id="supportCacChart"></canvas></div>
+      <p><span class="k">支撑：</span>拼图2.0后CAC连续下降，证明规则调整对成本端有效。</p>
+    </div>
+    <div class="support-item">
+      <h5>结论支撑图C：结构性风险</h5>
+      <div class="chart-wrapper" style="height:220px;"><canvas id="supportStructureChart"></canvas></div>
+      <p><span class="k">支撑：</span>头部贡献持续上升，同时下游开户→入金率下滑，增长稳定性承压。</p>
+    </div>
+    <div class="support-item">
+      <h5>结论支撑图D：行动边界（CAC目标190）</h5>
+      <div class="chart-wrapper" style="height:220px;"><canvas id="supportTargetChart"></canvas></div>
+      <p><span class="k">支撑：</span>当前71.33低于目标190，具备加玩法空间，但需坚持「有效PC口径」和分层投放。</p>
+    </div>
+    </div>
+
     <div class="core-summary-grid" style="margin-bottom:16px;">
       <div class="core-card warn">
         <div class="core-head">1）Q1下滑核心是“流量精准度不足”而不是机制失效</div>
@@ -626,33 +802,6 @@
 
   <div class="section anchor-target" id="concl-directions-head">
     <div class="section-title concl-t2">二、优化方向</div>
-    <div class="section-subtitle">基于飞书《活动优化策略》并结合复盘结论给出有效性判断与落地优先级</div>
-  </div>
-
-  <div class="support-jump-wrap anchor-target" id="concl-support">
-    <div class="support-jump-label">结论支撑 · 四宫格图表</div>
-    <div class="support-list" style="margin-bottom:14px;">
-    <div class="support-item">
-      <h5>结论支撑图A：放量与效率背离</h5>
-      <div class="chart-wrapper" style="height:220px;"><canvas id="supportMismatchChart"></canvas></div>
-      <p><span class="k">支撑：</span>3月UV放量但终极转化率最低，验证“抓量不抓质”会导致放量不增效。</p>
-    </div>
-    <div class="support-item">
-      <h5>结论支撑图B：CAC控制成效</h5>
-      <div class="chart-wrapper" style="height:220px;"><canvas id="supportCacChart"></canvas></div>
-      <p><span class="k">支撑：</span>拼图2.0后CAC连续下降，证明规则调整对成本端有效。</p>
-    </div>
-    <div class="support-item">
-      <h5>结论支撑图C：结构性风险</h5>
-      <div class="chart-wrapper" style="height:220px;"><canvas id="supportStructureChart"></canvas></div>
-      <p><span class="k">支撑：</span>头部贡献持续上升，同时下游开户→入金率下滑，增长稳定性承压。</p>
-    </div>
-    <div class="support-item">
-      <h5>结论支撑图D：行动边界（CAC目标190）</h5>
-      <div class="chart-wrapper" style="height:220px;"><canvas id="supportTargetChart"></canvas></div>
-      <p><span class="k">支撑：</span>当前71.33低于目标190，具备加玩法空间，但需坚持“有效PC口径”和分层投放。</p>
-    </div>
-  </div>
   </div>
 
   <div class="report-card jump-dir1 anchor-target" style="margin-bottom:14px;" id="concl-dir1">
@@ -892,395 +1041,29 @@
   </div>
 
   <div class="report-card jump-dir4 anchor-target" id="concl-dir4">
-    <h4>方向4：节庆/行情窗口短促加码（1-2周）</h4>
-    <div class="mini">核心目标：在高关注窗口短促提效，避免全年固定加码拖累 CAC；以下为<strong>重点场景清单</strong>与执行结构，实际上线窗口由运营日历与合规确认。</div>
-
-    <div style="font-size:13px;font-weight:700;margin-bottom:8px;color:#2c3e50;margin-top:12px;">重点触发场景（可做单选或多窗口串联）</div>
-    <table class="summary-table" style="margin-bottom:14px;font-size:12px;">
-      <thead>
-        <tr><th>场景类型</th><th>典型时间点 / 事件</th><th>用户关注点（可做文案钩子）</th><th>建议窗口长度</th></tr>
-      </thead>
-      <tbody>
-        <tr><td><strong>龙头财报季</strong></td><td>MAG7 及半导体权重财报密集周（如 NVDA / META / GOOGL / MSFT / AMZN 等各自发布日前后）</td><td>「财报波动下的入场与风控」讨论度高，适合<strong>分享谈资</strong>+ short strike</td><td><strong>单家公司 3～5 天</strong>；叠加季可做成「财报月」多波段</td></tr>
-        <tr><td><strong>宏观数据窗</strong></td><td><strong>FOMC</strong>决议周、<strong>CPI / PPI</strong>、<strong>非农</strong>、核心 PCE 发布日前后</td><td>利率路径与风险偏好切换，短线关注度峰值</td><td>数据日前后各 <strong>2～3 天</strong></td></tr>
-        <tr><td><strong>极端行情 / 地缘事件</strong></td><td>VIX 冲高、指数单日大幅波动、重大地缘冲突引发避险情绪（参照历史类似窗口）</td><td>强调「极端波动期更需要靠谱邀请人与合规提示」，严控贩卖焦虑</td><td><strong>48h～7 天</strong>，视舆情与合规意见<strong>随时熔断</strong></td></tr>
-        <tr><td><strong>美股节庆零售季</strong></td><td><strong>感恩节～黑五～网络星期一</strong>、圣诞新年长假前后</td><td>消费与「年终盘点」心智，适合礼盒类展示与家族分享场景</td><td><strong>7～10 天</strong> / 波段</td></tr>
-        <tr><td><strong>农历新年 / 返校季</strong></td><td>CNY 红包心智、Q1 退税与奖学金到账窗口（示意）</td><td>「安家钱、压岁钱、第一份投资」叙事</td><td><strong>7～14 天</strong></td></tr>
-        <tr><td><strong>税务相关窗口</strong></td><td>IRA 截止缴存讨论季、报税截止前后（按监管可用表述）</td><td>退休账户与长期定投教育，不宜承诺税务结果</td><td><strong>5～10 天</strong></td></tr>
-      </tbody>
-    </table>
+    <h4>方向4：节庆/行情窗口短促加码（1～2 周）</h4>
 
     <div style="font-size:13px;font-weight:700;margin-bottom:8px;color:#2c3e50;">加码形式与活动节奏</div>
     <table class="summary-table" style="margin-bottom:12px;font-size:12px;">
       <thead><tr><th>模块</th><th>内容（示意）</th></tr></thead>
       <tbody>
-        <tr><td><strong>加码形式</strong></td><td>在拼图梯度与转盘规则不变前提下，窗口期内每<strong>1 笔有效邀请</strong>额外 <strong>+$50 NVDA</strong>（或等价展示权益）；与会员/人群加码<strong>取「就高」或「封顶叠加」</strong>须在上线前写清规则。</td></tr>
-        <tr><td><strong>节奏</strong></td><td><strong>T-3～T-1</strong> 预热（倒计时 + KOL/社群素材）；<strong>活动中</strong> 实时榜单 / 限量播报；<strong>T+1～T+3</strong> 复盘数据与回收未核销曝光。</td></tr>
-        <tr><td><strong>监控指标</strong></td><td>窗口期<strong>分享率</strong>、传播倍率（K-factor）、<strong>有效 PC-CAC</strong>、回本周期（与基线周对比）。</td></tr>
-        <tr><td><strong>风险控制</strong></td><td>投放与 Push <strong>仅限高意向白名单</strong>；禁止泛流量硬买量；极端行情窗需<strong>合规二审话术</strong>与熔断阈值。</td></tr>
+        <tr><td><strong>加码形式</strong></td><td>在拼图梯度与转盘规则不变前提下，窗口期内每 <strong>1</strong> 笔有效邀请额外 <strong>+$50 NVDA</strong>（或等价展示权益）；与会员/人群加码取<strong>「就高」</strong>或<strong>「封顶叠加」</strong>须在上线前写清规则。</td></tr>
+        <tr><td><strong>节奏</strong></td><td><strong>T-3 ~ T-1</strong> 预热（倒计时 + KOL/社群素材）；<strong>活动中</strong> 实时榜单 / 限量播报；<strong>T+1 ~ T+3</strong> 复盘数据与回收未核销曝光。</td></tr>
+        <tr><td><strong>监控指标</strong></td><td>窗口期分享率、传播倍率（K-factor）、有效 PC-CAC、回本周期（与基线周对比）。</td></tr>
+        <tr><td><strong>风险控制</strong></td><td>投放与 Push <strong>仅限高意向白名单</strong>；禁止泛流量硬买量；极端行情窗需合规二审话术与熔断阈值。</td></tr>
       </tbody>
     </table>
 
-    <div class="note"><strong>下阶段计划建议：</strong>先执行「拼图梯度（里程碑方案一推荐）+ <strong>抽奖玩法方案一（统一池）</strong>灰度 + 会员分层加码 + 节点短促」；若中段拉动不足再评估<strong>方案二</strong>，头部疲软再叠<strong>方案三</strong>。</div>
   </div>
 </div>
 </div>
 </div>
 </div>
-
-<!-- ===== TAB 1: OVERVIEW ===== -->
-<div id="tab-overview" class="tab-content">
-<div class="content">
-
-  <div class="highlight-box">
-    <h3>执行摘要</h3>
-    <p>基于完整8步漏斗（活动页→分享→受邀→点击入金→注册→开户→入金→有效入金）及纳斯达克行情数据的综合分析，报告揭示了三个层次的结论：<br><br>
-    <strong>① 终极转化率（UV→有效入金）：</strong>最优 <strong>2月 9.2%</strong>，最差 <strong>3月 2.3%</strong>，差距4倍。根本驱动是用户意向质量，而非产品或行情。<br>
-    <strong>② 行情≠转化的简单正相关：</strong>2月行情最差（纳指-2.7%）转化反而最高——因为逆势到访的是高意向投资者。3月行情同样差（-3.3%，叠加美伊战争恐慌），但泛流量涌入导致终极转化率崩至2.3%。<strong>谁来比行情涨跌更重要。</strong><br>
-    <strong>③ 下游新卡点：</strong>开户→入金率从12月86.6%持续下滑至4月69.6%（-17pp），"空账户"问题浮现，需专项激励干预。</p>
-  </div>
-
-  <div class="section">
-    <div class="section-title">核心结论（分点）</div>
-    <div class="core-summary-grid">
-      <div class="core-card warn">
-        <div class="core-head">1）Q1下滑是“规模波动 + 流量不精准”叠加，不是漏斗机制失效</div>
-        <div class="core-body">Q4到Q1：页面UV <span class="r">96,802 → 53,478（-44.8%）</span>，新增有效入金 <span class="r">3,812 → 2,246（-41.1%）</span>；3月虽有UV放量（28,045），但页面UV→有效仅<span class="r">2.3%</span>，说明上游人群匹配度不足。</div>
-      </div>
-
-      <div class="core-card ok">
-        <div class="core-head">2）3月活动规则调整（拼图2.0）已验证控本有效，可复用</div>
-        <div class="core-body">有效PC-CAC：<span class="r">654.39（2月）</span> → <span class="g">121.36（3月）</span> → <span class="g">71.33（4月）</span>。在<span class="k">CAC目标190</span>下仍有加玩法空间，可加“梯度奖励优化/会员加码”提升吸引力。</div>
-      </div>
-
-      <div class="core-card neutral">
-        <div class="core-head">3）行情影响存在，但不是决定项；活动节奏与人群质量更关键</div>
-        <div class="core-body">2月纳指<span class="r">-2.7%</span>但终极转化<span class="g">9.2%（最高）</span>；3月纳指<span class="r">-3.3%</span>且终极转化<span class="r">2.3%（最低）</span>。同样弱市下结果分化，验证“谁进入漏斗”比“市场涨跌”更关键。</div>
-      </div>
-
-      <div class="core-card purple">
-        <div class="core-head">4）结构性问题需持续治理：头部依赖高、下游空账户上升</div>
-        <div class="core-body">头部邀请人贡献占比：<span class="r">11%（25Q3）→ 25%（25Q4）→ 47%（26Q1）</span>。开户→入金率：<span class="g">86.6%（12月）</span>降至<span class="r">69.6%（4月）</span>（-17pp），空账户问题仍在累积。</div>
-      </div>
-    </div>
-  </div>
-
-  <div class="kpi-grid">
-    <div class="kpi-card ok">
-      <div class="kpi-label">终极转化率最优（2月）</div>
-      <div class="kpi-value ok">9.2%</div>
-      <div class="kpi-sub">页面UV → 有效入金PC</div>
-      <div class="kpi-trend up">↑ 每11个UV产出1笔有效入金</div>
-    </div>
-    <div class="kpi-card warn">
-      <div class="kpi-label">终极转化率最差（3月）</div>
-      <div class="kpi-value warn">2.3%</div>
-      <div class="kpi-sub">页面UV → 有效入金PC</div>
-      <div class="kpi-trend down">↓ 对比2月效率差4倍</div>
-    </div>
-    <div class="kpi-card neutral">
-      <div class="kpi-label">平均页面分享率UV</div>
-      <div class="kpi-value" style="color:#f39c12">14.8%</div>
-      <div class="kpi-sub">上游最大漏斗卡点</div>
-      <div class="kpi-trend" style="color:#f39c12">~ 区间 3.9% — 27.1%</div>
-    </div>
-    <div class="kpi-card warn">
-      <div class="kpi-label">开户→入金率（持续下滑）</div>
-      <div class="kpi-value warn">69.6%</div>
-      <div class="kpi-sub">4月最新值，12月为86.6%</div>
-      <div class="kpi-trend down">↓ 下游新兴卡点，-17pp</div>
-    </div>
-  </div>
-
-  <div class="section">
-    <div class="section-title">核心指标趋势
-      <span class="section-subtitle">月度变化对比</span>
-    </div>
-    <div class="chart-grid">
-      <div class="chart-card full">
-        <div class="chart-title">页面UV 与 点击入金UV 趋势（含活动节点）</div>
-        <div class="chart-desc">反映整体流量与最终转化的月度走势</div>
-        <div class="chart-wrapper"><canvas id="mainTrendChart"></canvas></div>
-      </div>
-      <div class="chart-card">
-        <div class="chart-title">页面分享率UV（月度）</div>
-        <div class="chart-desc">活动页 → 点击分享按钮 的UV转化率</div>
-        <div class="chart-wrapper"><canvas id="shareRateChart"></canvas></div>
-      </div>
-      <div class="chart-card">
-        <div class="chart-title">综合转化率UV（月度）</div>
-        <div class="chart-desc">页面UV → 点击入金UV 端到端转化率</div>
-        <div class="chart-wrapper"><canvas id="totalConvChart"></canvas></div>
-      </div>
-    </div>
-  </div>
-
-  <div class="section">
-    <div class="section-title">纳斯达克行情 vs 漏斗转化相关性
-      <span class="section-subtitle">市场情绪与推荐转化的关系</span>
-    </div>
-    <div class="chart-grid">
-      <div class="chart-card full">
-        <div class="chart-title">纳斯达克月环比涨跌（柱） vs 终极转化率及分享率（线）</div>
-        <div class="chart-desc">行情与漏斗指标并非简单正相关——2月行情最差时转化率反而最高，说明<strong>用户质量（谁来）比市场涨跌更重要</strong></div>
-        <div class="chart-wrapper" style="height:300px"><canvas id="nasdaqChart"></canvas></div>
-      </div>
-      <div class="chart-card full">
-        <div style="display:grid;grid-template-columns:repeat(6,1fr);gap:12px">
-          <div style="font-size:12px;font-weight:600;color:#888;grid-column:1/-1;margin-bottom:4px">各月市场背景（纳斯达克）</div>
-          <div style="background:#e8f5e9;border-radius:8px;padding:12px;text-align:center">
-            <div style="font-size:12px;font-weight:700;color:#555">11月</div>
-            <div style="font-size:18px;font-weight:700;color:#27ae60">+稳</div>
-            <div style="font-size:11px;color:#888;margin-top:4px">23,024<br>选后牛市延续</div>
-          </div>
-          <div style="background:#e8f5e9;border-radius:8px;padding:12px;text-align:center">
-            <div style="font-size:12px;font-weight:700;color:#555">12月</div>
-            <div style="font-size:18px;font-weight:700;color:#27ae60">+1.5%</div>
-            <div style="font-size:11px;color:#888;margin-top:4px">23,377<br>年末科技股强势</div>
-          </div>
-          <div style="background:#fff3e0;border-radius:8px;padding:12px;text-align:center">
-            <div style="font-size:12px;font-weight:700;color:#555">1月</div>
-            <div style="font-size:18px;font-weight:700;color:#f39c12">+0.6%</div>
-            <div style="font-size:11px;color:#888;margin-top:4px">23,521<br>关税威胁首现<br>单日暴跌2.4%</div>
-          </div>
-          <div style="background:#fde8e8;border-radius:8px;padding:12px;text-align:center">
-            <div style="font-size:12px;font-weight:700;color:#555">2月</div>
-            <div style="font-size:18px;font-weight:700;color:#e74c3c">-2.7%</div>
-            <div style="font-size:11px;color:#888;margin-top:4px">22,893<br>科技股抛售<br>关税升级</div>
-          </div>
-          <div style="background:#c0392b;border-radius:8px;padding:12px;text-align:center">
-            <div style="font-size:12px;font-weight:700;color:#fff">3月</div>
-            <div style="font-size:18px;font-weight:700;color:#fff">-3.3%</div>
-            <div style="font-size:11px;color:rgba(255,255,255,0.85);margin-top:4px">22,130<br>美伊战争爆发<br>油价>$100</div>
-          </div>
-          <div style="background:#e8f5e9;border-radius:8px;padding:12px;text-align:center">
-            <div style="font-size:12px;font-weight:700;color:#555">4月</div>
-            <div style="font-size:18px;font-weight:700;color:#27ae60">+8.9%</div>
-            <div style="font-size:11px;color:#888;margin-top:4px">24,103<br>战争降级<br>创历史新高</div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <div class="section">
-    <div class="section-title">完整数据明细</div>
-    <div class="chart-card">
-      <table class="data-table">
-        <thead>
-          <tr>
-            <th>指标</th>
-            <th>11月</th>
-            <th>12月<br><span style="font-weight:400;font-size:11px">🎄圣诞活动</span></th>
-            <th>1月</th>
-            <th>2月</th>
-            <th>3月<br><span style="font-weight:400;font-size:11px">📢扩推广</span></th>
-            <th>4月</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr><td colspan="7" style="background:#f8f9ff;font-size:12px;color:#888;padding:8px 14px;font-weight:600">— 推荐官侧（活动页）—</td></tr>
-          <tr>
-            <td>页面 PV</td>
-            <td>42,879</td><td>90,537</td><td>48,298</td><td>21,749</td><td>45,047</td><td>11,289</td>
-          </tr>
-          <tr>
-            <td>页面 UV</td>
-            <td>15,020</td><td class="cell-good">40,298</td><td>18,934</td><td>6,499</td><td>28,045</td><td>6,540</td>
-          </tr>
-          <tr>
-            <td>点击分享按钮 UV</td>
-            <td>2,137</td><td>1,582</td><td>922</td><td>1,758</td><td class="cell-good">3,919</td><td>1,594</td>
-          </tr>
-          <tr style="background:#fffbf0">
-            <td><strong>页面分享率 UV</strong></td>
-            <td class="cell-mid">14.2%</td><td class="cell-warn">3.9%</td><td class="cell-warn">4.9%</td><td class="cell-good">27.1%</td><td class="cell-mid">14.0%</td><td class="cell-good">24.4%</td>
-          </tr>
-          <tr><td colspan="7" style="background:#f8f9ff;font-size:12px;color:#888;padding:8px 14px;font-weight:600">— 受邀者侧（受邀页）—</td></tr>
-          <tr>
-            <td>受邀页 UV</td>
-            <td>7,166</td><td>11,705</td><td>10,301</td><td>6,678</td><td>6,130</td><td>5,447</td>
-          </tr>
-          <tr>
-            <td>点击入金按钮 UV</td>
-            <td>2,031</td><td>4,213</td><td>4,164</td><td>2,782</td><td>1,763</td><td>1,646</td>
-          </tr>
-          <tr style="background:#fffbf0">
-            <td><strong>受邀转化率 UV</strong></td>
-            <td class="cell-mid">28.3%</td><td class="cell-mid">36.0%</td><td class="cell-good">40.4%</td><td class="cell-good">41.7%</td><td class="cell-mid">28.8%</td><td class="cell-mid">30.2%</td>
-          </tr>
-          <tr style="background:#fff0f0">
-            <td><strong>综合转化率 UV</strong></td>
-            <td class="cell-mid">13.5%</td><td class="cell-warn">10.5%</td><td class="cell-good">22.0%</td><td class="cell-good">42.8%</td><td class="cell-warn">6.3%</td><td class="cell-mid">18.0%</td>
-          </tr>
-          <tr style="background:#f8f9ff">
-            <td><strong>分享传播倍率</strong><br><span style="font-size:11px;color:#aaa">受邀UV/分享UV</span></td>
-            <td>3.35x</td><td class="cell-good">7.40x</td><td class="cell-good">11.17x</td><td>3.80x</td><td class="cell-warn">1.56x</td><td>2.37x</td>
-          </tr>
-          <tr><td colspan="7" style="background:#f0f8ff;font-size:12px;color:#555;padding:8px 14px;font-weight:600">— 最终转化（受邀→注册→开户→入金）—</td></tr>
-          <tr>
-            <td>注册人数</td>
-            <td>1,866</td><td>2,748</td><td class="cell-good">3,290</td><td>2,228</td><td>1,171</td><td>1,301</td>
-          </tr>
-          <tr>
-            <td>开户人数</td>
-            <td>1,649</td><td>2,354</td><td class="cell-good">2,828</td><td>1,894</td><td>922</td><td>992</td>
-          </tr>
-          <tr>
-            <td>入金PC</td>
-            <td>1,405</td><td>2,038</td><td class="cell-good">2,345</td><td>1,529</td><td>678</td><td>690</td>
-          </tr>
-          <tr>
-            <td><strong>有效入金PC</strong></td>
-            <td>1,023</td><td class="cell-good">1,297</td><td>1,016</td><td>598</td><td>632</td><td>689</td>
-          </tr>
-          <tr style="background:#fffbf0">
-            <td>点击入金→注册率</td>
-            <td class="cell-good">91.9%</td><td class="cell-warn">65.2%</td><td class="cell-mid">79.0%</td><td class="cell-mid">80.1%</td><td class="cell-warn">66.4%</td><td class="cell-mid">79.0%</td>
-          </tr>
-          <tr style="background:#fffbf0">
-            <td>注册→开户率</td>
-            <td class="cell-good">88.4%</td><td class="cell-good">85.7%</td><td class="cell-good">86.0%</td><td class="cell-good">85.0%</td><td class="cell-mid">78.7%</td><td class="cell-mid">76.2%</td>
-          </tr>
-          <tr style="background:#fffbf0">
-            <td><strong>开户→入金率</strong></td>
-            <td class="cell-good">85.2%</td><td class="cell-good">86.6%</td><td class="cell-good">82.9%</td><td class="cell-mid">80.7%</td><td class="cell-mid">73.5%</td><td class="cell-warn">69.6%</td>
-          </tr>
-          <tr style="background:#fffbf0">
-            <td>入金→有效率</td>
-            <td class="cell-mid">72.8%</td><td class="cell-mid">63.6%</td><td class="cell-warn">43.3%</td><td class="cell-warn">39.1%</td><td class="cell-good">93.2%</td><td style="color:#888;font-size:12px">*含跨月</td>
-          </tr>
-          <tr style="background:#fff0f0">
-            <td><strong>终极转化率</strong><br><span style="font-size:11px;color:#aaa">页面UV→有效入金</span></td>
-            <td class="cell-mid">6.8%</td><td class="cell-warn">3.2%</td><td class="cell-mid">5.4%</td><td class="cell-good">9.2%</td><td class="cell-warn">2.3%</td><td class="cell-mid">7.5%</td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-  </div>
-
-</div>
 </div>
 
-<!-- ===== TAB 2: FUNNEL ===== -->
-<div id="tab-funnel" class="tab-content">
-<div class="content">
-
-  <div class="section">
-    <div class="section-title">漏斗整体结构</div>
-    <div class="funnel-container">
-      <div class="funnel-title">UV维度漏斗（以11月基准 + 各月对比）</div>
-      <div id="funnelViz"></div>
-    </div>
-  </div>
-
-  <div class="section">
-    <div class="section-title">各环节转化率月度对比</div>
-    <div class="chart-grid">
-      <div class="chart-card">
-        <div class="chart-title">分享传播倍率（受邀UV / 分享UV）</div>
-        <div class="chart-desc">反映每个分享者触达多少位受邀访客，越高代表分享质量越好</div>
-        <div class="chart-wrapper"><canvas id="leverageChart"></canvas></div>
-      </div>
-      <div class="chart-card">
-        <div class="chart-title">受邀页转化率（点击入金UV / 受邀页UV）</div>
-        <div class="chart-desc">受邀用户的入金意向率</div>
-        <div class="chart-wrapper"><canvas id="inviteConvChart"></canvas></div>
-      </div>
-      <div class="chart-card full">
-        <div class="chart-title">各漏斗节点UV/PC规模（完整漏斗对比）</div>
-        <div class="chart-desc">各月各环节绝对量，含下游注册→有效入金</div>
-        <div class="chart-wrapper" style="height:300px"><canvas id="stackedChart"></canvas></div>
-      </div>
-      <div class="chart-card full">
-        <div class="chart-title">下游转化率月度趋势（注册→开户→入金→有效入金）</div>
-        <div class="chart-desc">开户→入金率持续下滑，是下游最需要关注的新卡点</div>
-        <div class="chart-wrapper" style="height:260px"><canvas id="downstreamChart"></canvas></div>
-      </div>
-    </div>
-  </div>
-
-  <div class="section">
-    <div class="section-title">漏斗卡点识别</div>
-    <div class="chart-card">
-      <table class="summary-table">
-        <thead>
-          <tr>
-            <th>漏斗节点</th>
-            <th>转化均值</th>
-            <th>最好月份</th>
-            <th>最差月份</th>
-            <th>卡点等级</th>
-            <th>主要原因</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td><strong>活动页 → 点击分享</strong></td>
-            <td>14.8%</td>
-            <td>2月 27.1%</td>
-            <td>12月 3.9%</td>
-            <td><span class="tag tag-red">🔴 严重卡点</span></td>
-            <td>推广流量用户意向低；奖励驱动力不足</td>
-          </tr>
-          <tr>
-            <td><strong>分享 → 受邀页访问</strong></td>
-            <td>4.8x</td>
-            <td>1月 11.2x</td>
-            <td>3月 1.6x</td>
-            <td><span class="tag tag-orange">🟡 需关注</span></td>
-            <td>3月推广资源质量差，分享者朋友圈不匹配目标用户</td>
-          </tr>
-          <tr>
-            <td><strong>受邀页 → 点击入金</strong></td>
-            <td>34.1%</td>
-            <td>2月 41.7%</td>
-            <td>11月 28.3%</td>
-            <td><span class="tag tag-green">🟢 相对健康</span></td>
-            <td>受邀落地页体验基本稳定，转化率区间合理</td>
-          </tr>
-          <tr>
-            <td><strong>点击入金 → 注册</strong></td>
-            <td>76.9%</td>
-            <td>11月 91.9%</td>
-            <td>12月 65.2%</td>
-            <td><span class="tag tag-orange">🟡 需关注</span></td>
-            <td>用户意向质量差异大：高质量月份（11月）近乎完美完成率，推广流量月份大量流失</td>
-          </tr>
-          <tr>
-            <td><strong>注册 → 开户</strong></td>
-            <td>83.7%</td>
-            <td>11月 88.4%</td>
-            <td>4月 76.2%</td>
-            <td><span class="tag tag-green">🟢 相对稳定</span></td>
-            <td>整体稳健，但有微降趋势（-10pp），注意开户流程摩擦</td>
-          </tr>
-          <tr>
-            <td><strong>开户 → 入金PC</strong></td>
-            <td>79.8%</td>
-            <td>12月 86.6%</td>
-            <td>4月 69.6%</td>
-            <td><span class="tag tag-red">🔴 新兴卡点</span></td>
-            <td>从86.6%下滑至69.6%（-17pp），"空账户"比例上升，需专项入金激励与首入金引导</td>
-          </tr>
-          <tr>
-            <td><strong>入金PC → 有效入金PC</strong></td>
-            <td>62.4%</td>
-            <td>3月 93.2%</td>
-            <td>2月 39.1%</td>
-            <td><span class="tag tag-orange">🟡 波动大</span></td>
-            <td>月度差异极大，可能含数据时滞（3月高可能含跨月确认），需确认业务口径</td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-  </div>
-
-</div>
-</div>
 
 <!-- ===== TAB 3: INSIGHTS ===== -->
-<div id="tab-insights" class="tab-content">
+<div id="tab-insights" class="main-tab-panel">
 <div class="content">
 
   <div class="section">
@@ -1561,7 +1344,7 @@
 </div>
 
 <!-- ===== TAB 4: COMPETITOR ===== -->
-<div id="tab-competitor" class="tab-content">
+<div id="tab-competitor" class="main-tab-panel">
 <div class="content">
 
   <div class="section">
@@ -1734,16 +1517,8 @@
 </div>
 
 <!-- ===== TAB 5: RECOMMENDATIONS ===== -->
-<div id="tab-recommendations" class="tab-content">
+<div id="tab-recommendations" class="main-tab-panel">
 <div class="content">
-
-  <div class="highlight-box">
-    <h3>优化方向总纲</h3>
-    <p>基于完整漏斗数据+纳斯达克行情分析，下阶段优化核心逻辑：<strong>精而非广 + 择时而动</strong>。<br>
-    ① <strong>行情好转期（如当前4月反弹）</strong>：窗口期，适合重启流量投放，但必须是精准投放（投资意向人群），同时恢复高奖励激活存量推荐官。<br>
-    ② <strong>行情恐慌期</strong>：停止泛流量投放，专注精准激活高意向存量用户（他们反而在跌市中分享意愿更高）；同时提高奖励对冲恐慌情绪。<br>
-    ③ <strong>全周期</strong>：拦截"空账户"用户（开户未入金），这是与行情无关的持续优化点。</p>
-  </div>
 
   <div class="section">
     <div class="section-title">优化方案（按优先级排序）</div>
@@ -1792,27 +1567,6 @@
       </div>
 
       <div class="rec-card">
-        <div class="rec-priority p2">
-          <div class="p-num">P1</div>
-          <div>1个月内</div>
-        </div>
-        <div class="rec-content">
-          <div class="rec-title">优化推广资源策略：从"量"到"质"的流量精准化</div>
-          <div class="rec-why">数据支撑：3月扩大推广资源后传播倍率暴跌至1.56x，说明推广资源引入的用户根本不在有效推荐官朋友圈内。盲目扩量是漏斗毒药。</div>
-          <div class="rec-actions">
-            <div class="rec-action">对推广渠道按"落地分享率"和"受邀传播倍率"进行ROI评估，砍掉低质量渠道，集中预算到高质量渠道</div>
-            <div class="rec-action">推广人群定向：优先触达已持有股票账户、有投资行为记录的潜在用户，而非泛人群推广</div>
-            <div class="rec-action">引入"推荐官画像"：分析历史高质量推荐官的用户特征（年龄/职业/资产段/活跃时间段），反向指导推广素材和渠道选择</div>
-            <div class="rec-action">测试KOC/KOL合作模式：与垂直投资社区（Reddit/小红书/YouTube投资类账号）的意见领袖合作，这类合作带来的受邀用户质量远高于信息流广告</div>
-          </div>
-          <div class="rec-metric">
-            <div class="rec-metric-item">目标：<strong>推广流量分享率提升至8%+</strong>（现为3.9%）</div>
-            <div class="rec-metric-item">目标：<strong>传播倍率稳定在3x+</strong></div>
-          </div>
-        </div>
-      </div>
-
-      <div class="rec-card">
         <div class="rec-priority p1">
           <div class="p-num">P0</div>
           <div>立即</div>
@@ -1838,25 +1592,25 @@
           <div>1个月内</div>
         </div>
         <div class="rec-content">
-          <div class="rec-title">优化受邀落地页：强化社会证明 + 紧迫感设计</div>
-          <div class="rec-why">数据支撑：受邀转化率最高达41.7%，说明现有落地页已有基础，但未突破50%仍有明显优化空间。竞品普遍通过社会证明和限时设计将转化率推至45%+。</div>
+          <div class="rec-title">优化推广资源策略：从"量"到"质"的流量精准化</div>
+          <div class="rec-why">数据支撑：3月扩大推广资源后传播倍率暴跌至1.56x，说明推广资源引入的用户根本不在有效推荐官朋友圈内。盲目扩量是漏斗毒药。</div>
           <div class="rec-actions">
-            <div class="rec-action">强化社会证明：展示"已有X万用户通过推荐加入moomoo"、真实用户评价（尤其是日本本地用户评价），降低新用户疑虑</div>
-            <div class="rec-action">奖励可视化设计：在受邀落地页突出展示"您的朋友为您争取到的奖励"，明确奖励价值（如$XX现金/X股股票），激活损失厌恶心理</div>
-            <div class="rec-action">限时紧迫感：显示"此优惠邀请链接X天后过期"倒计时，加速决策（参考Webull 30天入金截止设计）</div>
-            <div class="rec-action">简化开户路径：A/B测试减少开户步骤数量，目标从受邀点击到完成注册最多3步</div>
+            <div class="rec-action">对推广渠道按"落地分享率"和"受邀传播倍率"进行ROI评估，砍掉低质量渠道，集中预算到高质量渠道</div>
+            <div class="rec-action">推广人群定向：优先触达已持有股票账户、有投资行为记录的潜在用户，而非泛人群推广</div>
+            <div class="rec-action">引入"推荐官画像"：分析历史高质量推荐官的用户特征（年龄/职业/资产段/活跃时间段），反向指导推广素材和渠道选择</div>
+            <div class="rec-action">测试KOC/KOL合作模式：与垂直投资社区（Reddit/小红书/YouTube投资类账号）的意见领袖合作，这类合作带来的受邀用户质量远高于信息流广告</div>
           </div>
           <div class="rec-metric">
-            <div class="rec-metric-item">目标：<strong>受邀转化率提升至45%+</strong></div>
-            <div class="rec-metric-item">目标：<strong>开户完成率提升15%</strong></div>
+            <div class="rec-metric-item">目标：<strong>推广流量分享率提升至8%+</strong>（现为3.9%）</div>
+            <div class="rec-metric-item">目标：<strong>传播倍率稳定在3x+</strong></div>
           </div>
         </div>
       </div>
 
       <div class="rec-card">
-        <div class="rec-priority p3">
-          <div class="p-num">P2</div>
-          <div>2-3个月</div>
+        <div class="rec-priority p2">
+          <div class="p-num">P1</div>
+          <div>1个月内</div>
         </div>
         <div class="rec-content">
           <div class="rec-title">推荐官活动页体验升级：进度可视化 + 分享内容赋能</div>
@@ -1874,26 +1628,27 @@
         </div>
       </div>
 
-    </div>
-  </div>
+      <div class="rec-card">
+        <div class="rec-priority p2">
+          <div class="p-num">P1</div>
+          <div>1个月内</div>
+        </div>
+        <div class="rec-content">
+          <div class="rec-title">优化受邀落地页：强化社会证明 + 紧迫感设计</div>
+          <div class="rec-why">数据支撑：受邀转化率最高达41.7%，说明现有落地页已有基础，但未突破50%仍有明显优化空间。竞品普遍通过社会证明和限时设计将转化率推至45%+。</div>
+          <div class="rec-actions">
+            <div class="rec-action">强化社会证明：展示"已有X万用户通过推荐加入moomoo"、真实用户评价（尤其是日本本地用户评价），降低新用户疑虑</div>
+            <div class="rec-action">奖励可视化设计：在受邀落地页突出展示"您的朋友为您争取到的奖励"，明确奖励价值（如$XX现金/X股股票），激活损失厌恶心理</div>
+            <div class="rec-action">限时紧迫感：显示"此优惠邀请链接X天后过期"倒计时，加速决策（参考Webull 30天入金截止设计）</div>
+            <div class="rec-action">简化开户路径：A/B测试减少开户步骤数量，目标从受邀点击到完成注册最多3步</div>
+          </div>
+          <div class="rec-metric">
+            <div class="rec-metric-item">目标：<strong>受邀转化率提升至45%+</strong></div>
+            <div class="rec-metric-item">目标：<strong>开户完成率提升15%</strong></div>
+          </div>
+        </div>
+      </div>
 
-  <div class="section">
-    <div class="section-title">下阶段执行路线图</div>
-    <div class="chart-card">
-      <table class="summary-table">
-        <thead>
-          <tr><th>时间</th><th>优先级</th><th>行动项</th><th>预期效果</th><th>负责方向</th></tr>
-        </thead>
-        <tbody>
-          <tr><td><strong>本周内</strong></td><td><span class="tag tag-red">P0</span></td><td>分析奖励调低前后的用户分层数据，确定奖励恢复方案</td><td>快速止血，恢复基础转化率</td><td>产品+运营</td></tr>
-          <tr><td><strong>本周内</strong></td><td><span class="tag tag-red">P0</span></td><td>上线"开户后7日未入金"专项激励触达（Push+邮件+首次入金奖励）</td><td>开户→入金率恢复至80%+</td><td>运营+产品</td></tr>
-          <tr><td><strong>2周内</strong></td><td><span class="tag tag-red">P0</span></td><td>从历史数据中识别Top推荐官用户，手动触达并给予专属激励</td><td>激活超级推荐官，提升传播倍率</td><td>运营</td></tr>
-          <tr><td><strong>1个月内</strong></td><td><span class="tag tag-orange">P1</span></td><td>推广渠道ROI审查，砍掉低质量渠道；测试KOC合作</td><td>提升推广流量分享率至8%+</td><td>市场+增长</td></tr>
-          <tr><td><strong>1个月内</strong></td><td><span class="tag tag-orange">P1</span></td><td>受邀落地页A/B测试：社会证明模块+奖励可视化+倒计时</td><td>受邀转化率提升至45%</td><td>产品+设计</td></tr>
-          <tr><td><strong>2个月内</strong></td><td><span class="tag tag-green">P2</span></td><td>推荐官进度看板上线；分享素材内容包制作</td><td>推荐官月均推荐次数提升</td><td>产品</td></tr>
-          <tr><td><strong>3个月内</strong></td><td><span class="tag tag-green">P2</span></td><td>推荐官分层体系上线（等级制度+专属权益）；节点营销计划</td><td>推荐官留存率和活跃度提升</td><td>产品+运营</td></tr>
-        </tbody>
-      </table>
     </div>
   </div>
 
@@ -1905,10 +1660,6 @@ const months = ['11月', '12月', '1月', '2月', '3月', '4月'];
 const pageUV = [15020, 40298, 18934, 6499, 28045, 9140];
 const shareUV = [2137, 1582, 922, 1758, 3919, 2211];
 const inviteUV = [7166, 11705, 10301, 6678, 6130, 5447];
-const depositUV = [2031, 4213, 4164, 2782, 1763, 1646];
-const regist    = [1866, 2748, 3290, 2228, 1171, 1301];
-const account   = [1649, 2354, 2828, 1894, 922, 992];
-const depositPC = [1405, 2038, 2345, 1529, 678, 690];
 const validPC   = [1023, 1297, 1016, 598, 632, 689];
 const shareRate = [14.2, 3.9, 4.9, 27.1, 14.0, 24.2];
 const leverage = [3.35, 7.40, 11.17, 3.80, 1.56, 2.37];
@@ -1917,403 +1668,10 @@ const totalConv = [13.5, 10.5, 22.0, 42.8, 6.3, 18.0];
 const ultimateConv = [6.8, 3.2, 5.4, 9.2, 2.3, 7.5];
 const cacMonths = ['1月', '2月', '3月', '4月'];
 const cac = [555.53, 654.39, 121.36, 71.33];
-// 纳斯达克综合指数月末收盘（来源：Macrotrends / Yahoo Finance，约值）
-const nasdaqClose = [23024, 23377, 23521, 22893, 22130, 24103];
 const nasdaqMoM   = [null, 1.5, 0.6, -2.7, -3.3, 8.9]; // 月环比 %
-const marketMemo  = [
-  '特朗普胜选后市场平稳，科技股延续上涨',
-  '年末行情上涨+1.5%，圣诞消费情绪好',
-  '关税威胁首现（格陵兰岛），单日暴跌2.4%，全年最差交易日',
-  '科技股持续抛售，关税议题发酵，月跌-2.7%',
-  '美伊战争爆发，油价破$100，VIX恐慌指数飙升，月跌-3.3%',
-  '战争降级后强力反弹，纳指创历史新高+8.9%（截至4月16日）'
-];
 const clickToRegist    = [91.9, 65.2, 79.0, 80.1, 66.4, 79.0];
 const registToAccount  = [88.4, 85.7, 86.0, 85.0, 78.7, 76.2];
 const accountToDeposit = [85.2, 86.6, 82.9, 80.7, 73.5, 69.6];
-const depositToValid   = [72.8, 63.6, 43.3, 39.1, 93.2, 99.9];
-
-const eventAnnotations = {
-  plugins: {
-    legend: { position: 'bottom', labels: { font: { size: 12 }, padding: 16 } },
-    tooltip: { mode: 'index', intersect: false }
-  },
-  scales: {
-    x: { grid: { color: 'rgba(0,0,0,0.04)' } },
-    y: { grid: { color: 'rgba(0,0,0,0.04)' }, beginAtZero: true }
-  }
-};
-
-// Main Trend Chart
-new Chart(document.getElementById('mainTrendChart'), {
-  type: 'line',
-  data: {
-    labels: months,
-    datasets: [
-      {
-        label: '页面UV',
-        data: pageUV,
-        borderColor: '#0f3460',
-        backgroundColor: 'rgba(15,52,96,0.08)',
-        fill: true,
-        tension: 0.4,
-        borderWidth: 2.5,
-        pointRadius: 5
-      },
-      {
-        label: '点击分享UV',
-        data: shareUV,
-        borderColor: '#f39c12',
-        backgroundColor: 'rgba(243,156,18,0.08)',
-        fill: true,
-        tension: 0.4,
-        borderWidth: 2,
-        pointRadius: 5
-      },
-      {
-        label: '受邀页UV',
-        data: inviteUV,
-        borderColor: '#27ae60',
-        backgroundColor: 'rgba(39,174,96,0.08)',
-        fill: true,
-        tension: 0.4,
-        borderWidth: 2,
-        pointRadius: 5
-      },
-      {
-        label: '点击入金UV',
-        data: depositUV,
-        borderColor: '#e74c3c',
-        backgroundColor: 'rgba(231,76,60,0.08)',
-        fill: true,
-        tension: 0.4,
-        borderWidth: 2,
-        pointRadius: 5
-      }
-    ]
-  },
-  options: {
-    responsive: true, maintainAspectRatio: false,
-    ...eventAnnotations,
-    plugins: {
-      ...eventAnnotations.plugins,
-      tooltip: {
-        mode: 'index', intersect: false,
-        callbacks: {
-          afterBody: (items) => {
-            const idx = items[0].dataIndex;
-            const events = { 1: '🎄 圣诞活动上线', 4: '📢 奖励调低+扩推广资源' };
-            return events[idx] ? ['\n活动事件：' + events[idx]] : [];
-          }
-        }
-      }
-    }
-  }
-});
-
-// Share Rate Chart
-new Chart(document.getElementById('shareRateChart'), {
-  type: 'bar',
-  data: {
-    labels: months,
-    datasets: [{
-      label: '页面分享率UV (%)',
-      data: shareRate,
-      backgroundColor: shareRate.map(v => v >= 20 ? 'rgba(39,174,96,0.8)' : v >= 10 ? 'rgba(243,156,18,0.8)' : 'rgba(231,76,60,0.8)'),
-      borderRadius: 6,
-      borderSkipped: false
-    }]
-  },
-  options: {
-    responsive: true, maintainAspectRatio: false,
-    plugins: {
-      legend: { display: false },
-      tooltip: { callbacks: { label: ctx => `分享率: ${ctx.raw}%` } }
-    },
-    scales: {
-      x: { grid: { display: false } },
-      y: { grid: { color: 'rgba(0,0,0,0.04)' }, beginAtZero: true, ticks: { callback: v => v + '%' } }
-    }
-  }
-});
-
-// Total Conv Chart
-new Chart(document.getElementById('totalConvChart'), {
-  type: 'bar',
-  data: {
-    labels: months,
-    datasets: [{
-      label: '综合转化率UV (%)',
-      data: totalConv,
-      backgroundColor: totalConv.map(v => v >= 20 ? 'rgba(39,174,96,0.8)' : v >= 10 ? 'rgba(243,156,18,0.8)' : 'rgba(231,76,60,0.8)'),
-      borderRadius: 6,
-      borderSkipped: false
-    }]
-  },
-  options: {
-    responsive: true, maintainAspectRatio: false,
-    plugins: {
-      legend: { display: false },
-      tooltip: { callbacks: { label: ctx => `综合转化率: ${ctx.raw}%` } }
-    },
-    scales: {
-      x: { grid: { display: false } },
-      y: { grid: { color: 'rgba(0,0,0,0.04)' }, beginAtZero: true, ticks: { callback: v => v + '%' } }
-    }
-  }
-});
-
-// Leverage Chart (Funnel tab)
-new Chart(document.getElementById('leverageChart'), {
-  type: 'line',
-  data: {
-    labels: months,
-    datasets: [{
-      label: '分享传播倍率（受邀UV/分享UV）',
-      data: leverage,
-      borderColor: '#8e44ad',
-      backgroundColor: 'rgba(142,68,173,0.1)',
-      fill: true,
-      tension: 0.4,
-      borderWidth: 2.5,
-      pointRadius: 6,
-      pointBackgroundColor: leverage.map(v => v >= 5 ? '#27ae60' : v >= 3 ? '#f39c12' : '#e74c3c')
-    }]
-  },
-  options: {
-    responsive: true, maintainAspectRatio: false,
-    plugins: { legend: { display: false } },
-    scales: {
-      x: { grid: { display: false } },
-      y: { grid: { color: 'rgba(0,0,0,0.04)' }, beginAtZero: true,
-           ticks: { callback: v => v + 'x' } }
-    }
-  }
-});
-
-// Invite Conv Chart
-new Chart(document.getElementById('inviteConvChart'), {
-  type: 'line',
-  data: {
-    labels: months,
-    datasets: [{
-      label: '受邀转化率UV (%)',
-      data: inviteConv,
-      borderColor: '#27ae60',
-      backgroundColor: 'rgba(39,174,96,0.1)',
-      fill: true,
-      tension: 0.4,
-      borderWidth: 2.5,
-      pointRadius: 6,
-      pointBackgroundColor: inviteConv.map(v => v >= 38 ? '#27ae60' : '#f39c12')
-    }]
-  },
-  options: {
-    responsive: true, maintainAspectRatio: false,
-    plugins: { legend: { display: false } },
-    scales: {
-      x: { grid: { display: false } },
-      y: { grid: { color: 'rgba(0,0,0,0.04)' }, min: 20, max: 50,
-           ticks: { callback: v => v + '%' } }
-    }
-  }
-});
-
-// Stacked Chart (full funnel)
-new Chart(document.getElementById('stackedChart'), {
-  type: 'bar',
-  data: {
-    labels: months,
-    datasets: [
-      { label: '页面UV', data: pageUV, backgroundColor: 'rgba(15,52,96,0.75)', borderRadius: 4 },
-      { label: '点击分享UV', data: shareUV, backgroundColor: 'rgba(243,156,18,0.8)', borderRadius: 4 },
-      { label: '受邀页UV', data: inviteUV, backgroundColor: 'rgba(39,174,96,0.8)', borderRadius: 4 },
-      { label: '点击入金UV', data: depositUV, backgroundColor: 'rgba(231,76,60,0.8)', borderRadius: 4 },
-      { label: '注册', data: regist, backgroundColor: 'rgba(142,68,173,0.8)', borderRadius: 4 },
-      { label: '有效入金PC', data: validPC, backgroundColor: 'rgba(192,57,43,0.9)', borderRadius: 4 }
-    ]
-  },
-  options: {
-    responsive: true, maintainAspectRatio: false,
-    plugins: { legend: { position: 'bottom', labels: { font: { size: 11 }, padding: 12 } } },
-    scales: {
-      x: { grid: { display: false } },
-      y: { grid: { color: 'rgba(0,0,0,0.04)' }, beginAtZero: true }
-    }
-  }
-});
-
-// Downstream conversion rates chart
-new Chart(document.getElementById('downstreamChart'), {
-  type: 'line',
-  data: {
-    labels: months,
-    datasets: [
-      {
-        label: '点击入金→注册 (%)',
-        data: clickToRegist,
-        borderColor: '#8e44ad',
-        backgroundColor: 'rgba(142,68,173,0.05)',
-        tension: 0.4, borderWidth: 2, pointRadius: 5
-      },
-      {
-        label: '注册→开户 (%)',
-        data: registToAccount,
-        borderColor: '#2980b9',
-        backgroundColor: 'rgba(41,128,185,0.05)',
-        tension: 0.4, borderWidth: 2, pointRadius: 5
-      },
-      {
-        label: '开户→入金 (%)',
-        data: accountToDeposit,
-        borderColor: '#e74c3c',
-        backgroundColor: 'rgba(231,76,60,0.08)',
-        fill: true,
-        tension: 0.4, borderWidth: 2.5, pointRadius: 6,
-        pointBackgroundColor: accountToDeposit.map(v => v >= 80 ? '#27ae60' : v >= 70 ? '#f39c12' : '#e74c3c')
-      },
-      {
-        label: '终极转化率UV→有效入金 (%)',
-        data: ultimateConv,
-        borderColor: '#c0392b',
-        borderDash: [5,3],
-        backgroundColor: 'rgba(192,57,43,0.05)',
-        tension: 0.4, borderWidth: 2, pointRadius: 5
-      }
-    ]
-  },
-  options: {
-    responsive: true, maintainAspectRatio: false,
-    plugins: {
-      legend: { position: 'bottom', labels: { font: { size: 12 }, padding: 14 } },
-      tooltip: { mode: 'index', intersect: false, callbacks: { label: ctx => `${ctx.dataset.label}: ${ctx.raw}%` } }
-    },
-    scales: {
-      x: { grid: { display: false } },
-      y: { grid: { color: 'rgba(0,0,0,0.04)' }, beginAtZero: true, ticks: { callback: v => v + '%' } }
-    }
-  }
-});
-
-// Funnel Visualization
-function buildFunnel() {
-  const container = document.getElementById('funnelViz');
-  const data = [
-    { label: '活动页UV', values: pageUV, color: '#0f3460' },
-    { label: '点击分享UV', values: shareUV, color: '#f39c12' },
-    { label: '受邀页UV', values: inviteUV, color: '#27ae60' },
-    { label: '点击入金UV', values: depositUV, color: '#e74c3c' },
-    { label: '注册', values: regist, color: '#8e44ad' },
-    { label: '开户', values: account, color: '#2980b9' },
-    { label: '入金PC', values: depositPC, color: '#16a085' },
-    { label: '有效入金PC', values: validPC, color: '#c0392b' }
-  ];
-
-  // Header
-  let html = '<div style="display:grid;grid-template-columns:130px repeat(6,1fr);gap:8px;margin-bottom:12px">';
-  html += '<div></div>';
-  const eventLabels = { 1: '🎄', 4: '📢' };
-  months.forEach((m, i) => {
-    html += `<div style="text-align:center;font-size:13px;font-weight:600;color:#444">${m}${eventLabels[i] || ''}</div>`;
-  });
-  html += '</div>';
-
-  data.forEach((row, rowIdx) => {
-    html += '<div style="display:grid;grid-template-columns:130px repeat(6,1fr);gap:8px;margin-bottom:8px;align-items:center">';
-    html += `<div style="text-align:right;padding-right:12px;font-size:13px;font-weight:600;color:#444">${row.label}</div>`;
-
-    const maxVal = Math.max(...row.values);
-    row.values.forEach((val, i) => {
-      const pct = (val / maxVal * 100).toFixed(0);
-      let convLabel = '';
-      if (rowIdx > 0) {
-        const prevVals = data[rowIdx - 1].values;
-        const rate = (val / prevVals[i] * 100).toFixed(1);
-        convLabel = `<span style="font-size:10px;color:rgba(255,255,255,0.75);margin-left:4px">${rate}%</span>`;
-      }
-      html += `<div style="background:${row.color};border-radius:6px;padding:8px 10px;width:${Math.max(pct,20)}%;min-width:60px;max-width:100%">
-        <div style="color:white;font-size:12px;font-weight:700">${val.toLocaleString()}${convLabel}</div>
-      </div>`;
-    });
-    html += '</div>';
-  });
-
-  container.innerHTML = html;
-}
-buildFunnel();
-
-// NASDAQ correlation chart
-new Chart(document.getElementById('nasdaqChart'), {
-  type: 'bar',
-  data: {
-    labels: months,
-    datasets: [
-      {
-        label: '纳斯达克月环比 (%)',
-        data: nasdaqMoM,
-        backgroundColor: nasdaqMoM.map(v => v === null ? 'transparent' : v >= 0 ? 'rgba(39,174,96,0.6)' : 'rgba(192,57,43,0.6)'),
-        borderColor:     nasdaqMoM.map(v => v === null ? 'transparent' : v >= 0 ? '#27ae60' : '#c0392b'),
-        borderWidth: 1.5,
-        borderRadius: 6,
-        yAxisID: 'yNasdaq',
-        order: 2
-      },
-      {
-        type: 'line',
-        label: '终极转化率UV→有效入金 (%)',
-        data: ultimateConv,
-        borderColor: '#c0392b',
-        backgroundColor: 'rgba(192,57,43,0.08)',
-        fill: true,
-        tension: 0.4, borderWidth: 2.5, pointRadius: 7,
-        pointBackgroundColor: ultimateConv.map(v => v >= 7 ? '#27ae60' : v >= 4 ? '#f39c12' : '#c0392b'),
-        yAxisID: 'yConv',
-        order: 1
-      },
-      {
-        type: 'line',
-        label: '页面分享率UV (%)',
-        data: shareRate,
-        borderColor: '#f39c12',
-        borderDash: [6, 3],
-        tension: 0.4, borderWidth: 2, pointRadius: 5,
-        yAxisID: 'yConv',
-        order: 1
-      }
-    ]
-  },
-  options: {
-    responsive: true, maintainAspectRatio: false,
-    plugins: {
-      legend: { position: 'bottom', labels: { font: { size: 12 }, padding: 16 } },
-      tooltip: {
-        mode: 'index', intersect: false,
-        callbacks: {
-          afterBody: (items) => {
-            const idx = items[0].dataIndex;
-            return [`\n行情背景：${marketMemo[idx]}`];
-          }
-        }
-      }
-    },
-    scales: {
-      yNasdaq: {
-        type: 'linear', position: 'left',
-        grid: { color: 'rgba(0,0,0,0.04)' },
-        title: { display: true, text: '纳斯达克月环比 (%)', color: '#555', font: { size: 11 } },
-        ticks: { callback: v => v + '%', color: '#666' }
-      },
-      yConv: {
-        type: 'linear', position: 'right',
-        grid: { drawOnChartArea: false },
-        title: { display: true, text: '转化率 (%)', color: '#555', font: { size: 11 } },
-        beginAtZero: true,
-        ticks: { callback: v => v + '%', color: '#666' }
-      }
-    }
-  }
-});
-
 // ===== Report-focused charts =====
 if (document.getElementById('retroVolumeChart')) {
   new Chart(document.getElementById('retroVolumeChart'), {
@@ -2565,8 +1923,61 @@ function jumpToAnchorId(id) {
   if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
 }
 
-/** 左侧目录：滚动到锚点并高亮当前条目（已与正文同页，无需再切 Tab） */
+function resizeAllCharts() {
+  if (typeof Chart === 'undefined' || !Chart.getChart) return;
+  document.querySelectorAll('canvas').forEach(function(canvas) {
+    var ch = Chart.getChart(canvas);
+    if (ch) {
+      try { ch.resize(); } catch (e) {}
+    }
+  });
+}
+
+/** 顶层 Tab：活动复盘 / 深度洞察 等 */
+function switchMainTab(panelId, opts) {
+  opts = opts || {};
+  document.querySelectorAll('.main-tab-strip button').forEach(function(btn) {
+    var on = btn.getAttribute('data-panel') === panelId;
+    btn.classList.toggle('active', on);
+    btn.setAttribute('aria-selected', on ? 'true' : 'false');
+  });
+  document.querySelectorAll('.main-tab-panel').forEach(function(p) {
+    p.classList.toggle('active', p.id === panelId);
+  });
+  if (!opts.skipHash) {
+    var slug = panelId === 'panel-doc' ? 'doc' : panelId.replace(/^tab-/, '');
+    if (history.replaceState) history.replaceState(null, '', '#' + slug);
+    else window.location.hash = slug;
+  }
+  requestAnimationFrame(function() {
+    requestAnimationFrame(resizeAllCharts);
+  });
+}
+
+document.querySelectorAll('.main-tab-strip button').forEach(function(btn) {
+  btn.addEventListener('click', function() {
+    switchMainTab(btn.getAttribute('data-panel'));
+  });
+});
+
+(function initMainTabHash() {
+  var map = {
+    doc: 'panel-doc',
+    insights: 'tab-insights',
+    competitor: 'tab-competitor',
+    recommendations: 'tab-recommendations'
+  };
+  function applyHashFromUrl() {
+    var raw = (window.location.hash || '').replace(/^#/, '');
+    if (map[raw]) switchMainTab(map[raw], { skipHash: true });
+  }
+  applyHashFromUrl();
+  window.addEventListener('hashchange', applyHashFromUrl);
+})();
+
+/** 左侧目录：先回到「活动复盘」再滚动锚点 */
 function outlineGo(anchorId, linkEl) {
+  switchMainTab('panel-doc', { skipHash: true });
   document.querySelectorAll('.doc-outline-link').forEach(function(a) {
     a.classList.remove('doc-outline-link--active');
   });
